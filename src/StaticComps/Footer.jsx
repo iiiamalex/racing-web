@@ -10,7 +10,7 @@ const Footer = () => {
         <footer className="footer">
             <div className="footer-video-background">
                 <video autoPlay loop muted playsInline className="footer-video">
-                    <source src="/Assets/Footer-Background.mp4" type="video/mp4" />
+                    <source src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/footerBG.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div className="footer-overlay"></div>

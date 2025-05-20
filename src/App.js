@@ -12,7 +12,7 @@ function App() {
         <>
             <div className="global-video-wrapper">
                 <video autoPlay muted loop playsInline className="global-bg-video">
-                    <source src="/Assets/Background.mp4" type="video/mp4" />
+                    <source src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/mainBG.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div className="global-video-overlay"></div>

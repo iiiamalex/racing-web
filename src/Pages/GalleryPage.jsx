@@ -16,20 +16,20 @@ const gallerySections = [
         title: "Track Action",
         type: "video",
         media: [
-            { src: "/Assets/MR_Race1.mov", title: "Helmet Cam Sprint" },
-            { src: "/Assets/MR_Race1.mov", title: "Pit Exit Burnout" },
-            { src: "/Assets/MR_Race1.mov", title: "Helmet Cam Sprint" },
-            { src: "/Assets/MR_Race1.mov", title: "Pit Exit Burnout" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Helmet Cam Sprint" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Pit Exit Burnout" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Helmet Cam Sprint" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Pit Exit Burnout" },
         ],
     },
     {
         title: "Behind the Scenes",
         type: "video",
         media: [
-            { src: "/Assets/Racing2.MP4", title: "Pre-Race Prep" },
-            { src: "/Assets/Racing2.MP4", title: "Team Strategy Brief" },
-            { src: "/Assets/Racing2.MP4", title: "Pre-Race Prep" },
-            { src: "/Assets/Racing2.MP4", title: "Team Strategy Brief" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Pre-Race Prep" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Team Strategy Brief" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Pre-Race Prep" },
+            { src: "https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4", title: "Team Strategy Brief" },
         ],
     },
 ];

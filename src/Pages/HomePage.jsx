@@ -48,7 +48,7 @@ function HomePage({}) {
                     muted
                     playsInline
                 >
-                    <source src='/Assets/MR_Race1.mov' type="video/mp4" />
+                    <source src='https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4' type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
 
@@ -109,7 +109,7 @@ function HomePage({}) {
                 <p className="section-text">Watch Mark tear up the track in these intense race moments.</p>
                 <div className="video-container">
                     <video className="video" controls autoPlay loop muted>
-                        <source src="/Assets/Racing2.MP4" type="video/mp4" />
+                        <source src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/MainRaceVid.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
