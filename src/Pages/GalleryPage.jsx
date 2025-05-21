@@ -5,9 +5,11 @@ const gallerySections = [
         title: "Race Day Highlights",
         type: "photo",
         media: [
-            { src: "/Assets/Gallery/Race2.jpg", title: "Chicago Street Circuit" },
-            { src: "/Assets/Gallery/Race3.jpeg", title: "Victory Lap in Phoenix" },
-            { src: "/Assets/Gallery/Race3.jpeg", title: "Desert Dash Finish" },
+            { src: "/Assets/Gallery/IMG_7021.jpeg", title: "Chicago Street Circuit" },
+            { src: "/Assets/Gallery/IMG_7024.jpeg", title: "Chicago Street Circuit" },
+            { src: "/Assets/Gallery/IMG_7026.jpeg", title: "Chicago Street Circuit" },
+            { src: "/Assets/Gallery/IMG_7027.jpeg", title: "Chicago Street Circuit" },
+            { src: "/Assets/Gallery/IMG_7046.jpg", title: "Chicago Street Circuit" },
         ],
     },
     {
