@@ -16,7 +16,10 @@ const Navbar = () => {
     return (
 
         <nav className="navbar">
-            <div className="logo">Rhoades<span className="red-logo">Racing</span></div>
+
+            <NavLink to="/" className="logo" onClick={() => setMenuOpen(false)}>
+                Rhoades<span className="red-logo">Racing</span>
+            </NavLink>
 
 
             <div className={`nav-links ${menuOpen ? "open" : ""}`}>
