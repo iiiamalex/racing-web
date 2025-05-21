@@ -61,3 +61,15 @@ app.post('/api/send-email', async (req, res) => {
 app.listen(3001, () => {
     console.log('🚀 Email API listening on http://localhost:3001');
 });
+
+const path = require('path');
+
+// Serve React frontend
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
