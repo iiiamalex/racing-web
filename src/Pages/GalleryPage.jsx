@@ -105,6 +105,20 @@ const GalleryPage = () => {
                             </div>
                         ))}
                     </div>
+
+                    {/* Add YouTube button under Behind the Scenes */}
+                    {section.title === "Behind the Scenes" && (
+                        <div className="youtube-button-wrapper">
+                            <a
+                                href="https://www.youtube.com/channel/your-channel-id"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="youtube-button"
+                            >
+                                Watch More on YouTube
+                            </a>
+                        </div>
+                    )}
                 </section>
             ))}
 
@@ -129,3 +143,4 @@ const GalleryPage = () => {
 };
 
 export default GalleryPage;
+
