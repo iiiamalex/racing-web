@@ -33,17 +33,7 @@ a:active {
 
 /*Navbar*/
 
-/* Reset & base */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body.menu-open {
-    overflow: hidden;
-}
-
+/* Navbar Container */
 /* Navbar Container */
 .navbar {
     position: fixed;
@@ -51,13 +41,14 @@ body.menu-open {
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: white;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding: 1rem 2rem;
     z-index: 1000;
-    backdrop-filter: blur(10px);
 }
 
 /* Logo */
@@ -65,16 +56,33 @@ body.menu-open {
     font-size: 1.6rem;
     font-weight: bold;
     letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
 }
 
 .red-logo {
     color: #ff3c3c;
 }
 
-/* Nav Links */
+.logo-img {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Nav Links – Default for Desktop */
 .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .nav-links a {
@@ -85,7 +93,6 @@ body.menu-open {
     transition: color 0.3s ease;
 }
 
-/* Animated underline */
 .nav-links a::after {
     content: "";
     position: absolute;
@@ -106,7 +113,73 @@ body.menu-open {
 .nav-links a.active {
     color: #ff3c3c;
 }
-/*End of Navbar CSS */
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 6px;
+    padding: 10px;
+    z-index: 1100;
+}
+
+.bar {
+    height: 3px;
+    width: 25px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.open .top {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger.open .middle {
+    opacity: 0;
+}
+
+.hamburger.open .bottom {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Responsive (Mobile) */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(15px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 999;
+    }
+
+    .nav-links.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .hamburger {
+        display: flex;
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+/*End of Navbar*/
 
 /* Footer CSS */
 .footer {
@@ -238,63 +311,6 @@ body.menu-open {
 /*End of Footer CSS*/
 
 /*Pages CSS*/
-
-/* Hamburger Menu */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 6px;
-    padding: 10px;
-}
-
-.bar {
-    height: 3px;
-    width: 25px;
-    background-color: white;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-.hamburger.open .top {
-    transform: translateY(9px) rotate(45deg);
-}
-
-.hamburger.open .middle {
-    opacity: 0;
-}
-
-.hamburger.open .bottom {
-    transform: translateY(-9px) rotate(-45deg);
-}
-
-/* Responsive Mobile Nav */
-@media (max-width: 768px) {
-    .nav-links {
-        position: fixed;
-        top: 70px;
-        right: 0;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1.5rem;
-        gap: 1.2rem;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        height: calc(100vh - 70px);
-        width: 250px;
-        background-color: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px); /* ✨ background blur */
-    }
-
-    .nav-links.open {
-        transform: translateX(0);
-    }
-
-    .hamburger {
-        display: flex;
-    }
-}
-/*End of Navbar*/
 
 /* Homepage CSS */
 
@@ -562,6 +578,14 @@ body.menu-open {
     margin-bottom: 1.5rem;
     color: #ffffff;
     text-align: left;
+}
+
+.section-title,
+.section-text {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* === Media Grid === */

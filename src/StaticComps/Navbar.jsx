@@ -18,9 +18,8 @@ const Navbar = () => {
         <nav className="navbar">
 
             <NavLink to="/" className="logo" onClick={() => setMenuOpen(false)}>
-                Rhoades<span className="red-logo">Racing</span>
+                <img src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/RR_Logo%20NO%20BACKGROUND.png"alt="Rhoades Racing Logo" className="logo-img" />
             </NavLink>
-
 
             <div className={`nav-links ${menuOpen ? "open" : ""}`}>
                 <NavLink to="/" end onClick={() => setMenuOpen(false)}>
