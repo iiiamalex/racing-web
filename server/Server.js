@@ -12,7 +12,7 @@ const { Resend } = require('resend');
 const app = express();
 
 // ✅ Enable CORS
-const allowedOrigins = ['http://localhost:3000', 'https://racing-web-production.up.railway.app']; // Add your custom domain later
+const allowedOrigins = ['http://localhost:3000', 'https://racing-web-production.up.railway.app', 'https://rhoadesracing.live/']; // Add your custom domain later
 app.use(cors({
     origin: allowedOrigins,
     methods: ['GET', 'POST'],
