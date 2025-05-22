@@ -2,6 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+
+// 🛠 PATCH: remove problematic debug vars to prevent Resend crash
+delete process.env.DEBUG;
+delete process.env.DEBUG_URL;
+
 const { Resend } = require('resend');
 
 const app = express();
@@ -32,6 +37,9 @@ app.post('/api/send-email', async (req, res) => {
     const { to, subject, html } = req.body;
 
     try {
+        // 🛠 PATCH: Add fallback in case DEBUG_URL is required internally
+        process.env.DEBUG_URL = process.env.DEBUG_URL || 'noop';
+
         const result = await resend.emails.send({
             from: 'onboarding@resend.dev',
             to,
@@ -67,4 +75,5 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
+
 
