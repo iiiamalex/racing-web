@@ -41,7 +41,7 @@ app.post('/api/send-email', async (req, res) => {
         process.env.DEBUG_URL = process.env.DEBUG_URL || 'noop';
 
         const result = await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'support@rhoadesracing.live',
             to,
             subject,
             html
