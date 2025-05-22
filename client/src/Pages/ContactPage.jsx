@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const ContactPage = () => {
-    const [formData, setFormData] = useState({name: '', email: '', message: ''});
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [status, setStatus] = useState(null);
     const [error, setError] = useState('');
 
     const videoRef = useRef(null);
 
-    // Seamless looping logic
+    // Seamless video loop
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -24,8 +24,8 @@ const ContactPage = () => {
     }, []);
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -35,32 +35,32 @@ const ContactPage = () => {
 
         const payload = {
             to: 'aaguilera.se66@gmail.com',
-            subject: `Message from ${formData.name}!`,
+            subject: `Message from ${formData.name}`,
             html: `
-                <p>You got a message from ${formData.name},</p>
-                <p>Their email address is ${formData.email}</p>
-                <blockquote>They wrote: ${formData.message}</blockquote>
-            `,
+                <p><strong>Sender:</strong> ${formData.name}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Message:</strong></p>
+                <blockquote>${formData.message}</blockquote>
+            `
         };
 
         try {
             const res = await fetch('/api/send-email', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(payload),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            const text = await res.text();
-            const data = JSON.parse(text);
+            const data = await res.json();
 
             if (res.ok && data.success) {
                 setStatus('sent');
-                setFormData({name: '', email: '', message: ''});
+                setFormData({ name: '', email: '', message: '' });
             } else {
-                throw new Error(data.error || "Unknown error");
+                throw new Error(data.error || 'Failed to send email');
             }
         } catch (err) {
-            setError(err.message);
+            setError(err.message || 'Unexpected error');
             setStatus('error');
         }
     };
@@ -76,7 +76,6 @@ const ContactPage = () => {
                 src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/contactBG.mp4"
                 type="video/mp4"
             />
-
             <div className="contact-overlay">
                 <div className="contact-page">
                     <h2 className="contact-title">Get in Touch</h2>
@@ -109,7 +108,7 @@ const ContactPage = () => {
                         </button>
                     </form>
 
-                    {status === 'sent' && <p className="success">Your message was sent successfully</p>}
+                    {status === 'sent' && <p className="success">Your message was sent successfully!</p>}
                     {status === 'error' && <p className="error">Something went wrong: {error}</p>}
                 </div>
             </div>
@@ -118,3 +117,4 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
