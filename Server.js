@@ -27,33 +27,25 @@ app.post('/api/send-email', async (req, res) => {
 
     try {
         const result = await resend.emails.send({
-            from: 'onboarding@resend.dev', // Sandbox sender only ** Change when in Production
+            from: 'onboarding@resend.dev', // Change this in production
             to,
             subject,
             html
         });
 
-        // Debugging Usage
+        // Debug output
         console.log("📦 Full Resend Response:", result);
 
         if (result.error) {
             throw new Error(result.error.message);
         }
 
-        if (result.error) {
-            throw new Error(result.error.message);
-        }
-
         console.log("✅ Email sent. ID:", result.id || '[no ID returned]');
-        res.status(200).json({ success: true, id: result.id || null });
-
-
-        console.log("✅ Email sent successfully. ID:", result.id);
-        res.status(200).json({ success: true, id: result.id });
+        return res.status(200).json({ success: true, id: result.id || null });
 
     } catch (err) {
         console.error("❌ Resend error:", err.message || err);
-        res.status(500).json({ success: false, error: err.message || "Unexpected error" });
+        return res.status(500).json({ success: false, error: err.message || "Unexpected error" });
     }
 });
 
