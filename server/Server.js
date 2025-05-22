@@ -1,17 +1,23 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const {Resend} = require('resend');
+const path = require('path');
+const { Resend } = require('resend');
 
 const app = express();
 
-// Enable CORS for all origins (adjust in production)
-app.use(cors());
+// ✅ Enable CORS
+const allowedOrigins = ['http://localhost:3000', 'https://racing-web-production.up.railway.app']; // Add your custom domain later
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 
-// Parse JSON requests
+// ✅ Parse JSON requests
 app.use(express.json());
 
-// Log API key status
+// ✅ Log API key status
 if (!process.env.RESEND_API_KEY) {
     console.error("❌ RESEND_API_KEY is missing. Check your .env file.");
     process.exit(1);
@@ -21,19 +27,18 @@ if (!process.env.RESEND_API_KEY) {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// POST endpoint to send email
+// ✅ Email endpoint
 app.post('/api/send-email', async (req, res) => {
-    const {to, subject, html} = req.body;
+    const { to, subject, html } = req.body;
 
     try {
         const result = await resend.emails.send({
-            from: 'onboarding@resend.dev', // Change this in production
+            from: 'onboarding@resend.dev',
             to,
             subject,
             html
         });
 
-        // Debug output
         console.log("📦 Full Resend Response:", result);
 
         if (result.error) {
@@ -41,15 +46,23 @@ app.post('/api/send-email', async (req, res) => {
         }
 
         console.log("✅ Email sent. ID:", result.id || '[no ID returned]');
-        return res.status(200).json({success: true, id: result.id || null});
+        return res.status(200).json({ success: true, id: result.id || null });
 
     } catch (err) {
         console.error("❌ Resend error:", err.message || err);
-        return res.status(500).json({success: false, error: err.message || "Unexpected error"});
+        return res.status(500).json({ success: false, error: err.message || "Unexpected error" });
     }
 });
 
-// Start server
+// ✅ Serve static React files
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// ✅ Catch-all: send React's index.html on unknown routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// ✅ Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
