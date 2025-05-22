@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { Resend } = require('resend');
+const {Resend} = require('resend');
 
 const app = express();
 
@@ -23,7 +23,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // POST endpoint to send email
 app.post('/api/send-email', async (req, res) => {
-    const { to, subject, html } = req.body;
+    const {to, subject, html} = req.body;
 
     try {
         const result = await resend.emails.send({
@@ -41,11 +41,11 @@ app.post('/api/send-email', async (req, res) => {
         }
 
         console.log("✅ Email sent. ID:", result.id || '[no ID returned]');
-        return res.status(200).json({ success: true, id: result.id || null });
+        return res.status(200).json({success: true, id: result.id || null});
 
     } catch (err) {
         console.error("❌ Resend error:", err.message || err);
-        return res.status(500).json({ success: false, error: err.message || "Unexpected error" });
+        return res.status(500).json({success: false, error: err.message || "Unexpected error"});
     }
 });
 

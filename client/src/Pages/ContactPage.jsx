@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 const ContactPage = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [formData, setFormData] = useState({name: '', email: '', message: ''});
     const [status, setStatus] = useState(null);
     const [error, setError] = useState('');
 
@@ -24,8 +24,8 @@ const ContactPage = () => {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {
@@ -46,7 +46,7 @@ const ContactPage = () => {
         try {
             const res = await fetch('/api/send-email', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(payload),
             });
 
@@ -55,7 +55,7 @@ const ContactPage = () => {
 
             if (res.ok && data.success) {
                 setStatus('sent');
-                setFormData({ name: '', email: '', message: '' });
+                setFormData({name: '', email: '', message: ''});
             } else {
                 throw new Error(data.error || "Unknown error");
             }

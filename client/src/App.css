@@ -308,6 +308,7 @@ a:active {
         font-size: 1rem;
     }
 }
+
 /*End of Footer CSS*/
 
 /*Pages CSS*/
@@ -443,6 +444,7 @@ a:active {
     border-radius: 1rem;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
+
 .highlight-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
@@ -549,6 +551,7 @@ a:active {
     color: #ccc;
     font-size: 0.95rem;
 }
+
 /*End of HomePage CSS*/
 
 /*GalleryPage CSS*/

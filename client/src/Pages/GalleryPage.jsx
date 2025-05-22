@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 const gallerySections = [
     {
         title: "Race Day Highlights",
         type: "photo",
         media: [
-            { src: "/Assets/Gallery/IMG_7021.jpeg", title: "Chicago Street Circuit" },
-            { src: "/Assets/Gallery/IMG_7024.jpeg", title: "Chicago Street Circuit" },
-            { src: "/Assets/Gallery/IMG_7026.jpeg", title: "Chicago Street Circuit" },
-            { src: "/Assets/Gallery/IMG_7027.jpeg", title: "Chicago Street Circuit" },
-            { src: "/Assets/Gallery/IMG_7046.jpg", title: "Chicago Street Circuit" },
+            {src: "/Assets/Gallery/IMG_7021.jpeg", title: "Chicago Street Circuit"},
+            {src: "/Assets/Gallery/IMG_7024.jpeg", title: "Chicago Street Circuit"},
+            {src: "/Assets/Gallery/IMG_7026.jpeg", title: "Chicago Street Circuit"},
+            {src: "/Assets/Gallery/IMG_7027.jpeg", title: "Chicago Street Circuit"},
+            {src: "/Assets/Gallery/IMG_7046.jpg", title: "Chicago Street Circuit"},
         ],
     },
     {
@@ -130,13 +130,13 @@ const GalleryPage = () => {
 
                     {focusedVideo && (
                         <>
-                            <video ref={videoRef} src={focusedVideo} controls className="overlay-video" />
+                            <video ref={videoRef} src={focusedVideo} controls className="overlay-video"/>
                             <div className="play-button" onClick={playFocusedVideo}>▶ Play Video</div>
                         </>
                     )}
 
                     {focusedPhoto && (
-                        <img src={focusedPhoto} alt="Focused" className="overlay-photo" />
+                        <img src={focusedPhoto} alt="Focused" className="overlay-photo"/>
                     )}
                 </div>
             )}

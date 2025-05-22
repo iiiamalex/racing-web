@@ -1,8 +1,8 @@
-import { TypeAnimation } from "react-type-animation";
+import {TypeAnimation} from "react-type-animation";
 import CountUp from "react-countup";
 import CountdownTimer from "../CompTools/Countdown";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 function HomePage() {
     const name = "Mark";
@@ -81,7 +81,7 @@ function HomePage() {
                                 sequence={[`${name} ${lastName}`, 1000]}
                                 wrapper="span"
                                 speed={2}
-                                style={{ display: "inline-block" }}
+                                style={{display: "inline-block"}}
                                 repeat={0}
                             />
                         </h1>
@@ -97,7 +97,8 @@ function HomePage() {
             <section className="about fade-in">
                 <h2 className="section-title">Meet the Racer</h2>
                 <p className="section-text">
-                    {name} is a professional racer from Chicago, IL. He is a certified competitor with victories in multiple major events.
+                    {name} is a professional racer from Chicago, IL. He is a certified competitor with victories in
+                    multiple major events.
                 </p>
             </section>
 
@@ -106,15 +107,15 @@ function HomePage() {
                 <div className="highlight-grid">
                     <div className="highlight-card">
                         <h3>1st Place Finishes</h3>
-                        <p className="highlight-value"><CountUp end={stats[0]} duration={2} /></p>
+                        <p className="highlight-value"><CountUp end={stats[0]} duration={2}/></p>
                     </div>
                     <div className="highlight-card">
                         <h3>Fastest Laps</h3>
-                        <p className="highlight-value"><CountUp end={stats[1]} duration={2} /></p>
+                        <p className="highlight-value"><CountUp end={stats[1]} duration={2}/></p>
                     </div>
                     <div className="highlight-card">
                         <h3>Championships</h3>
-                        <p className="highlight-value"><CountUp end={stats[2]} duration={2} /></p>
+                        <p className="highlight-value"><CountUp end={stats[2]} duration={2}/></p>
                     </div>
                 </div>
             </section>
@@ -135,7 +136,7 @@ function HomePage() {
 
             <section className="countdown fade-in">
                 <h2 className="section-title">Next Race Countdown</h2>
-                <CountdownTimer targetDate={nextEventDate} />
+                <CountdownTimer targetDate={nextEventDate}/>
             </section>
 
             <section className="events fade-in">
