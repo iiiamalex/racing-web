@@ -2,39 +2,34 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-
-// 🛠 PATCH: Clean problematic debug env vars that may crash Resend
-delete process.env.DEBUG;
-delete process.env.DEBUG_URL;
-
-const { Resend } = require('resend');
+const fetch = require('node-fetch'); // ✅ Using fetch instead of Resend SDK
 
 const app = express();
 
-// ✅ Define trusted origins
+// ✅ Define allowed CORS origins
 const allowedOrigins = [
     'http://localhost:3000',
     'https://racing-web-production.up.railway.app',
     'https://rhoadesracing.live'
 ];
 
-// ✅ Enable CORS securely
+// ✅ CORS config with origin filtering
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('❌ Not allowed by CORS'));
+            callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST'],
     credentials: true
 }));
 
-// ✅ Parse incoming JSON
+// ✅ Parse JSON bodies
 app.use(express.json());
 
-// ✅ Log API key status
+// ✅ Check Resend API key
 if (!process.env.RESEND_API_KEY) {
     console.error("❌ RESEND_API_KEY is missing. Check your .env file.");
     process.exit(1);
@@ -42,34 +37,38 @@ if (!process.env.RESEND_API_KEY) {
     console.log("✅ Resend API key loaded.");
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// ✅ POST endpoint for email submission
+// ✅ Email send endpoint using direct REST API
 app.post('/api/send-email', async (req, res) => {
     const { to, subject, html } = req.body;
 
     try {
-        process.env.DEBUG_URL = process.env.DEBUG_URL || 'noop'; // Patch for SDK bug
-
-        const result = await resend.emails.send({
-            from: 'support@rhoadesracing.live',
-            to,
-            subject,
-            html
+        const result = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'support@rhoadesracing.live', // ✅ Your verified sending domain
+                to,
+                subject,
+                html
+            })
         });
 
-        console.log("📦 Resend response:", result);
+        const data = await result.json();
 
-        if (result.error) {
-            throw new Error(result.error.message);
+        if (!result.ok) {
+            console.error("❌ Resend error:", data);
+            throw new Error(data.error || 'Unknown Resend error');
         }
 
-        console.log("✅ Email sent. ID:", result.id || '[no ID returned]');
-        return res.status(200).json({ success: true, id: result.id || null });
+        console.log("✅ Email sent:", data);
+        res.status(200).json({ success: true, id: data.id });
 
     } catch (err) {
-        console.error("❌ Resend error:", err.message || err);
-        return res.status(500).json({ success: false, error: err.message || "Unexpected error" });
+        console.error("❌ Email send failed:", err.message);
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
@@ -81,12 +80,12 @@ app.use('/api', (req, res) => {
 // ✅ Serve static React build
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-// ✅ React Router catch-all
+// ✅ Catch-all route for React Router
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-// ✅ Start server
+// ✅ Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const ContactPage = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', message: '', honeypot: '' });
     const [status, setStatus] = useState(null);
     const [error, setError] = useState('');
 
     const videoRef = useRef(null);
 
-    // Seamless video loop
+    // Seamless background video loop
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -23,6 +23,14 @@ const ContactPage = () => {
         return () => video.removeEventListener('timeupdate', handleLoop);
     }, []);
 
+    // Auto-clear error message
+    useEffect(() => {
+        if (status === 'error') {
+            const timeout = setTimeout(() => setError(''), 5000);
+            return () => clearTimeout(timeout);
+        }
+    }, [status]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -33,9 +41,12 @@ const ContactPage = () => {
         setStatus('sending');
         setError('');
 
+        // 🛡️ Spam bot check
+        if (formData.honeypot) return;
+
         const payload = {
             to: 'aaguilera.se66@gmail.com',
-            subject: `Message from ${formData.name}`,
+            subject: `New message from ${formData.name} (${formData.email})`,
             html: `
                 <p><strong>Sender:</strong> ${formData.name}</p>
                 <p><strong>Email:</strong> ${formData.email}</p>
@@ -55,7 +66,7 @@ const ContactPage = () => {
 
             if (res.ok && data.success) {
                 setStatus('sent');
-                setFormData({ name: '', email: '', message: '' });
+                setFormData({ name: '', email: '', message: '', honeypot: '' });
             } else {
                 throw new Error(data.error || 'Failed to send email');
             }
@@ -103,13 +114,24 @@ const ContactPage = () => {
                             onChange={handleChange}
                             required
                         />
+                        {/* 🕳️ Honeypot field for spam bots */}
+                        <input
+                            type="text"
+                            name="honeypot"
+                            value={formData.honeypot}
+                            onChange={handleChange}
+                            style={{ display: 'none' }}
+                            tabIndex="-1"
+                            autoComplete="off"
+                        />
+
                         <button type="submit" disabled={status === 'sending'}>
                             {status === 'sending' ? 'Sending...' : 'Send Message'}
                         </button>
                     </form>
 
-                    {status === 'sent' && <p className="success">Your message was sent successfully!</p>}
-                    {status === 'error' && <p className="error">Something went wrong: {error}</p>}
+                    {status === 'sent' && <p className="success">✅ Your message was sent successfully!</p>}
+                    {status === 'error' && <p className="error">❌ Something went wrong: {error}</p>}
                 </div>
             </div>
         </div>
@@ -117,4 +139,5 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
 
