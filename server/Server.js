@@ -2,11 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
+const dotenv = require('dotenv');
+const { Resend } = require('resend');
+
+dotenv.config();
 
 const app = express();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ✅ CORS configuration
+// ✅ CORS Configuration
 const allowedOrigins = [
     'http://localhost:3000',
     'https://racing-web-production.up.railway.app',
@@ -25,10 +29,9 @@ app.use(cors({
     credentials: true
 }));
 
-// ✅ Parse JSON bodies
 app.use(express.json());
 
-// ✅ Email endpoint using Resend
+// ✅ Email Route
 app.post('/api/send-email', async (req, res) => {
     const { to, subject, html } = req.body;
 
@@ -38,49 +41,30 @@ app.post('/api/send-email', async (req, res) => {
     }
 
     try {
-        const fetch = (...args) =>
-            import('node-fetch').then(({ default: fetch }) => fetch(...args));
-
-        const result = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                from: 'support@rhoadesracing.live',
-                to,
-                subject,
-                html
-            })
+        const result = await resend.emails.send({
+            from: 'support@rhoadesracing.live',
+            to,
+            subject,
+            html
         });
 
-        const data = await result.json();
-
-        if (!result.ok) {
-            console.error('❌ Resend error:', data);
-            return res.status(500).json({ error: data.error || 'Failed to send email' });
-        }
-
-        console.log('✅ Email sent:', data);
-        res.status(200).json({ success: true, id: data.id });
-
-    } catch (err) {
-        console.error('❌ Send error:', err.message);
-        res.status(500).json({ error: 'Internal server error' });
+        console.log('✅ Email sent:', result);
+        res.status(200).json({ success: true, id: result.id });
+    } catch (error) {
+        console.error('❌ Resend error:', error);
+        res.status(500).json({ error: error.message || 'Failed to send email' });
     }
 });
 
-// ✅ Serve frontend only if build exists
+// ✅ Serve Frontend If Built
 const buildPath = path.resolve(__dirname, '../client/build');
+
 if (fs.existsSync(buildPath)) {
     console.log('📦 Serving static from:', buildPath);
     app.use(express.static(buildPath));
 
     app.get('/*', (req, res) => {
         const indexPath = path.join(buildPath, 'index.html');
-        console.log('📄 Fallback route hit. Serving:', indexPath);
-
         res.sendFile(indexPath, (err) => {
             if (err) {
                 console.error('❌ sendFile error:', err);
@@ -95,7 +79,7 @@ if (fs.existsSync(buildPath)) {
     });
 }
 
-// ✅ Start server
+// ✅ Start Server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
