@@ -57,7 +57,7 @@ const ContactPage = () => {
         };
 
         try {
-            const res = await fetch('/api/send-email', {
+            const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/send-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -140,6 +140,7 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
 
 
 
