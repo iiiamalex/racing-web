@@ -2,12 +2,12 @@
   "name": "racing-web",
   "version": "1.0.0",
   "private": true,
+  "workspaces": ["client", "server"],
   "scripts": {
     "build": "cd client && npm install && npm run build",
     "start": "node server/Server.js"
   },
   "engines": {
     "node": "20.x"
-  },
-  "dependencies": {}
+  }
 }
