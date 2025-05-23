@@ -7,7 +7,7 @@ const ContactPage = () => {
 
     const videoRef = useRef(null);
 
-    // Seamless background video loop
+    // Seamless video background loop
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -23,7 +23,7 @@ const ContactPage = () => {
         return () => video.removeEventListener('timeupdate', handleLoop);
     }, []);
 
-    // Auto-clear error message
+    // Auto-clear error messages
     useEffect(() => {
         if (status === 'error') {
             const timeout = setTimeout(() => setError(''), 5000);
@@ -36,22 +36,23 @@ const ContactPage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const sanitize = (str) => str.replace(/[<>]/g, '');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('sending');
         setError('');
 
-        // 🛡️ Spam bot check
         if (formData.honeypot) return;
 
         const payload = {
             to: 'aaguilera.se66@gmail.com',
-            subject: `New message from ${formData.name} (${formData.email})`,
+            subject: `New message from ${sanitize(formData.name)} (${sanitize(formData.email)})`,
             html: `
-                <p><strong>Sender:</strong> ${formData.name}</p>
-                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Sender:</strong> ${sanitize(formData.name)}</p>
+                <p><strong>Email:</strong> ${sanitize(formData.email)}</p>
                 <p><strong>Message:</strong></p>
-                <blockquote>${formData.message}</blockquote>
+                <blockquote>${sanitize(formData.message)}</blockquote>
             `
         };
 
@@ -59,7 +60,8 @@ const ContactPage = () => {
             const res = await fetch('/api/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                credentials: 'include'
             });
 
             const data = await res.json();
@@ -114,7 +116,6 @@ const ContactPage = () => {
                             onChange={handleChange}
                             required
                         />
-                        {/* 🕳️ Honeypot field for spam bots */}
                         <input
                             type="text"
                             name="honeypot"
@@ -139,5 +140,6 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
 
 
