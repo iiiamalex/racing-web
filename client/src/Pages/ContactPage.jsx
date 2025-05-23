@@ -1,80 +1,50 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
-const ContactPage = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', message: '', honeypot: '' });
-    const [status, setStatus] = useState(null);
-    const [error, setError] = useState('');
+export default function ContactPage() {
+    const [fd, setFd] = useState({ name: "", email: "", message: "", honeypot: "" });
+    const [status, setStatus] = useState("idle");
+    const videoRef = useRef();
 
-    const videoRef = useRef(null);
-
-    // Seamless video background loop
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
-
-        const handleLoop = () => {
-            if (video.duration - video.currentTime < 0.3) {
-                video.currentTime = 0;
-                video.play();
+        const v = videoRef.current;
+        if (!v) return;
+        const loop = () => {
+            if (v.duration - v.currentTime < 0.3) {
+                v.currentTime = 0;
+                v.play();
             }
         };
-
-        video.addEventListener('timeupdate', handleLoop);
-        return () => video.removeEventListener('timeupdate', handleLoop);
+        v.addEventListener("timeupdate", loop);
+        return () => v.removeEventListener("timeupdate", loop);
     }, []);
 
-    // Auto-clear error messages
-    useEffect(() => {
-        if (status === 'error') {
-            const timeout = setTimeout(() => setError(''), 5000);
-            return () => clearTimeout(timeout);
-        }
-    }, [status]);
+    const handle = (e) => setFd(p => ({ ...p, [e.target.name]: e.target.value }));
+    const sanitize = (s) => s.replace(/[<>]/g, "");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const sanitize = (str) => str.replace(/[<>]/g, '');
-
-    const handleSubmit = async (e) => {
+    const submit = async (e) => {
         e.preventDefault();
-        setStatus('sending');
-        setError('');
-
-        if (formData.honeypot) return;
-
-        const payload = {
-            to: 'aaguilera.se66@gmail.com',
-            subject: `New message from ${sanitize(formData.name)} (${sanitize(formData.email)})`,
-            html: `
-                <p><strong>Sender:</strong> ${sanitize(formData.name)}</p>
-                <p><strong>Email:</strong> ${sanitize(formData.email)}</p>
-                <p><strong>Message:</strong></p>
-                <blockquote>${sanitize(formData.message)}</blockquote>
-            `
-        };
-
+        if (fd.honeypot) return;
+        setStatus("sending");
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/send-email`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-                credentials: 'include'
-            });
-
+            const res = await fetch(
+                `${process.env.REACT_APP_API_BASE_URL}/api/send-email`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        to: "aaguilera.se66@gmail.com",
+                        subject: `New message from ${sanitize(fd.name)} (${sanitize(fd.email)})`,
+                        html: `<p><strong>Message:</strong></p><blockquote>${sanitize(fd.message)}</blockquote>`
+                    })
+                }
+            );
             const data = await res.json();
-
-            if (res.ok && data.success) {
-                setStatus('sent');
-                setFormData({ name: '', email: '', message: '', honeypot: '' });
-            } else {
-                throw new Error(data.error || 'Failed to send email');
-            }
-        } catch (err) {
-            setError(err.message || 'Unexpected error');
-            setStatus('error');
+            if (!res.ok || !data.success) throw new Error(data.error || "Failed to send");
+            setStatus("sent");
+            setFd({ name: "", email: "", message: "", honeypot: "" });
+        } catch {
+            setStatus("error");
         }
     };
 
@@ -83,63 +53,29 @@ const ContactPage = () => {
             <video
                 ref={videoRef}
                 className="video-background"
-                autoPlay
-                muted
-                playsInline
+                autoPlay muted playsInline
                 src="https://pub-11fe6e6621de4f139652de06caab7aa8.r2.dev/contactBG.mp4"
-                type="video/mp4"
             />
             <div className="contact-overlay">
                 <div className="contact-page">
                     <h2 className="contact-title">Get in Touch</h2>
-                    <form className="contact-form" onSubmit={handleSubmit}>
-                        <input
-                            name="name"
-                            type="text"
-                            placeholder="Your Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="Your Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                        <textarea
-                            name="message"
-                            placeholder="Your Message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="honeypot"
-                            value={formData.honeypot}
-                            onChange={handleChange}
-                            style={{ display: 'none' }}
-                            tabIndex="-1"
-                            autoComplete="off"
-                        />
-
-                        <button type="submit" disabled={status === 'sending'}>
-                            {status === 'sending' ? 'Sending...' : 'Send Message'}
+                    <form className="contact-form" onSubmit={submit}>
+                        <input required name="name" type="text" placeholder="Your Name" value={fd.name} onChange={handle}/>
+                        <input required name="email" type="email" placeholder="Your Email" value={fd.email} onChange={handle}/>
+                        <textarea required name="message" placeholder="Your Message" value={fd.message} onChange={handle}/>
+                        <input name="honeypot" style={{display:"none"}} value={fd.honeypot} onChange={handle}/>
+                        <button type="submit" disabled={status==="sending"}>
+                            {status==="sending" ? "Sending…" : "Send Message"}
                         </button>
                     </form>
-
-                    {status === 'sent' && <p className="success">✅ Your message was sent successfully!</p>}
-                    {status === 'error' && <p className="error">❌ Something went wrong: {error}</p>}
+                    {status==="sent" && <p className="success">✅ Your message was sent successfully!</p>}
+                    {status==="error" && <p className="error">❌ Something went wrong, please try again.</p>}
                 </div>
             </div>
         </div>
     );
-};
+}
 
-export default ContactPage;
 
 
 

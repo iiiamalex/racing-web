@@ -1,40 +1,32 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 
-const Countdown = ({targetDate}) => {
-    const calculateTimeLeft = () => {
-        const difference = +new Date(targetDate) - +new Date();
-        let timeLeft = {};
-
-        if (difference > 0) {
-            timeLeft = {
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60),
-            };
-        }
-
-        return timeLeft;
+export default function Countdown({ targetDateISO }) {
+    const calculate = () => {
+        const diff = Date.parse(targetDateISO) - Date.now();
+        if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        return {
+            days: Math.floor(diff / 86400000),
+            hours: Math.floor((diff % 86400000) / 3600000),
+            minutes: Math.floor((diff % 3600000) / 60000),
+            seconds: Math.floor((diff % 60000) / 1000),
+        };
     };
 
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+    const [timeLeft, setTimeLeft] = useState(calculate());
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setTimeLeft(calculateTimeLeft());
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    });
+        const iv = setInterval(() => setTimeLeft(calculate()), 1000);
+        return () => clearInterval(iv);
+    }, [targetDateISO]);
 
     return (
         <div className="countdown-grid">
-            <div><span>{timeLeft.days || 0}</span><p>Days</p></div>
-            <div><span>{timeLeft.hours || 0}</span><p>Hours</p></div>
-            <div><span>{timeLeft.minutes || 0}</span><p>Minutes</p></div>
-            <div><span>{timeLeft.seconds || 0}</span><p>Seconds</p></div>
+            {["days", "hours", "minutes", "seconds"].map((unit) => (
+                <div key={unit}>
+                    <span>{timeLeft[unit]}</span>
+                    <p>{unit.charAt(0).toUpperCase() + unit.slice(1)}</p>
+                </div>
+            ))}
         </div>
     );
-};
-
-export default Countdown;
+}

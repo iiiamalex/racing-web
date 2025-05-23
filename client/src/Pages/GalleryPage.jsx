@@ -1,15 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
-const gallerySections = [
+const sections = [
     {
         title: "Race Day Highlights",
         type: "photo",
         media: [
-            {src: "/Assets/Gallery/IMG_7021.jpeg", title: "Chicago Street Circuit"},
-            {src: "/Assets/Gallery/IMG_7024.jpeg", title: "Chicago Street Circuit"},
-            {src: "/Assets/Gallery/IMG_7026.jpeg", title: "Chicago Street Circuit"},
-            {src: "/Assets/Gallery/IMG_7027.jpeg", title: "Chicago Street Circuit"},
-            {src: "/Assets/Gallery/IMG_7046.jpg", title: "Chicago Street Circuit"},
+            { src: process.env.PUBLIC_URL + "/Assets/Gallery/IMG_7021.jpeg", title: "Chicago Street Circuit" },
+            { src: process.env.PUBLIC_URL + "/Assets/Gallery/IMG_7024.jpeg", title: "Chicago Street Circuit" },
+            { src: process.env.PUBLIC_URL + "/Assets/Gallery/IMG_7026.jpeg", title: "Chicago Street Circuit" },
+            { src: process.env.PUBLIC_URL + "/Assets/Gallery/IMG_7027.jpeg", title: "Chicago Street Circuit" },
+            { src: process.env.PUBLIC_URL + "/Assets/Gallery/IMG_7046.jpg", title: "Chicago Street Circuit" },
         ],
     },
     {
@@ -38,68 +38,49 @@ const gallerySections = [
     },
 ];
 
-const GalleryPage = () => {
-    const [focusedVideo, setFocusedVideo] = useState(null);
-    const [focusedPhoto, setFocusedPhoto] = useState(null);
-    const videoRef = useRef(null);
+export default function GalleryPage() {
+    const [focused, setFocused] = useState({ type: null, src: null });
+    const videoRef = useRef();
 
-    const openVideo = (src) => {
-        setFocusedPhoto(null);
-        setFocusedVideo(src);
-    };
-
-    const openPhoto = (src) => {
-        setFocusedVideo(null);
-        setFocusedPhoto(src);
-    };
-
-    const closeOverlay = () => {
-        if (videoRef.current) videoRef.current.pause();
-        setFocusedVideo(null);
-        setFocusedPhoto(null);
-    };
-
-    const playFocusedVideo = () => {
-        if (videoRef.current) videoRef.current.play();
+    const close = () => {
+        setFocused({ type: null, src: null });
+        videoRef.current?.pause();
     };
 
     useEffect(() => {
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') closeOverlay();
-        };
-        window.addEventListener('keydown', handleEscape);
-        return () => window.removeEventListener('keydown', handleEscape);
+        const handler = (e) => e.key === "Escape" && close();
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
     }, []);
 
     return (
         <div className="gallery-page">
             <h1 className="gallery-title">Gallery Highlights</h1>
-
-            {gallerySections.map((section, index) => (
-                <section className="gallery-section" key={index}>
-                    <h2 className="section-title">{section.title}</h2>
+            {sections.map((sec,i)=>(
+                <section key={i} className="gallery-section">
+                    <h2 className="section-title">{sec.title}</h2>
                     <div className="media-grid">
-                        {section.media.map((item, i) => (
-                            <div className="media-card" key={i}>
-                                {section.type === "photo" ? (
+                        {sec.media.map((item,j)=>(
+                            <div key={j} className="media-card">
+                                {sec.type === "photo" ? (
                                     <>
                                         <img
+                                            className="media-img"
                                             src={item.src}
                                             alt={item.title}
-                                            onClick={() => openPhoto(item.src)}
-                                            className="media-img"
+                                            onClick={()=>setFocused({type:"photo",src:item.src})}
                                         />
                                         <div className="media-title">{item.title}</div>
                                     </>
                                 ) : (
                                     <>
                                         <video
-                                            src={item.src}
-                                            muted
                                             className="media-video"
-                                            onClick={() => openVideo(item.src)}
-                                            onMouseOver={(e) => e.target.play()}
-                                            onMouseOut={(e) => e.target.pause()}
+                                            muted
+                                            onClick={()=>setFocused({type:"video",src:item.src})}
+                                            onMouseOver={e=>e.target.play()}
+                                            onMouseOut={e=>e.target.pause()}
+                                            src={item.src}
                                         />
                                         <div className="media-title">{item.title}</div>
                                     </>
@@ -107,15 +88,13 @@ const GalleryPage = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* Add YouTube button under Behind the Scenes */}
-                    {section.title === "Behind the Scenes" && (
+                    {sec.title === "Behind the Scenes" && (
                         <div className="youtube-button-wrapper">
                             <a
+                                className="youtube-button"
                                 href="https://www.youtube.com/channel/your-channel-id"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="youtube-button"
                             >
                                 Watch More on YouTube
                             </a>
@@ -124,25 +103,18 @@ const GalleryPage = () => {
                 </section>
             ))}
 
-            {(focusedVideo || focusedPhoto) && (
-                <div className="overlay">
-                    <span className="close-button" onClick={closeOverlay}>✕</span>
-
-                    {focusedVideo && (
-                        <>
-                            <video ref={videoRef} src={focusedVideo} controls className="overlay-video"/>
-                            <div className="play-button" onClick={playFocusedVideo}>▶ Play Video</div>
-                        </>
-                    )}
-
-                    {focusedPhoto && (
-                        <img src={focusedPhoto} alt="Focused" className="overlay-photo"/>
+            {focused.src && (
+                <div className="overlay" onClick={close}>
+                    <span className="close-button">✕</span>
+                    {focused.type === "video" ? (
+                        <video ref={videoRef} src={focused.src} controls className="overlay-video" />
+                    ) : (
+                        <img className="overlay-photo" src={focused.src} alt="Detail" />
                     )}
                 </div>
             )}
         </div>
     );
-};
+}
 
-export default GalleryPage;
 

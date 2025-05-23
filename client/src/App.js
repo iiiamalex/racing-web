@@ -1,28 +1,22 @@
-import {Route, Routes} from 'react-router-dom';
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./StaticComps/Navbar";
+import Footer from "./StaticComps/Footer";
 import HomePage from "./Pages/HomePage";
-import ContactPage from "./Pages/ContactPage";
 import GalleryPage from "./Pages/GalleryPage";
 import SponsorsPage from "./Pages/SponsorsPage";
-import Footer from "./StaticComps/Footer";
+import ContactPage from "./Pages/ContactPage";
 
-function App() {
-
+export default function App() {
     return (
         <>
-            <Navbar/>
-
+            <Navbar />
             <Routes>
-                <Route path="/" element={<HomePage/>}/>
-                <Route path="gallery" element={<GalleryPage/>}/>
-                <Route path="sponsors" element={<SponsorsPage/>}/>
-                <Route path="contact" element={<ContactPage/>}/>
+                <Route path="/" element={<HomePage />} />
+                <Route path="gallery" element={<GalleryPage />} />
+                <Route path="sponsors" element={<SponsorsPage />} />
+                <Route path="contact" element={<ContactPage />} />
             </Routes>
-
-            <Footer/>
-
+            <Footer />
         </>
     );
 }
-
-export default App

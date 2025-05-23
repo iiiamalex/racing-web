@@ -16,12 +16,12 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Environment variables
+# Env
 .env
 client/.env
 server/.env
 
-# IDE settings
+# IDE
 .idea/
 .vscode/
 *.swp
@@ -30,11 +30,3 @@ server/.env
 .next/
 .cache/
 dist/
-
-# Optional: Mac-specific files
-.AppleDouble
-.LSOverride
-
-# Optional: lockfiles (if you’re using only one package manager)
-# yarn.lock
-# pnpm-lock.yaml
