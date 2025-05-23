@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); // ✅ Needed to resolve build paths
+
 const app = express();
 
 const allowedOrigins = [
@@ -8,6 +10,7 @@ const allowedOrigins = [
     'https://rhoadesracing.live'
 ];
 
+// CORS middleware
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -22,12 +25,22 @@ app.use(cors({
 
 app.use(express.json());
 
-app.get('/', (req, res) => res.send('Hello World!'));
+// ✅ Serve React build folder
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// ✅ API health or base test route
+app.get('/api', (req, res) => res.json({ status: 'API is live' }));
+
+// ✅ React fallback for any route not handled above
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
 });
+
 
 // require('dotenv').config();
 // const path = require('path');
